@@ -38,6 +38,10 @@ requirements:
     - colcon-recursive-crawl
     - colcon-ros
     - colcon-test-result
+    - colcon-argcomplete  # [not win]
+    - colcon-cd  # [not win]
+    - colcon-bash  # [not win]
+    - colcon-zsh  # [not win]
 
 test:
   imports:
