@@ -5,7 +5,7 @@ context:
   version: "0.3.0"
 
 package:
-  name: ${{ name }}
+  name: colcon-common-extensions
   version: ${{ version }}
 
 source:
@@ -56,6 +56,8 @@ tests:
   - python:
       imports:
         - colcon_common_extensions
+      # The recipe includes colcon-notification only on Windows, unlike upstream metadata.
+      pip_check: false
 
 about:
   homepage: https://github.com/colcon/${{ name }}
