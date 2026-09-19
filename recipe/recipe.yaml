@@ -1,22 +1,27 @@
-{% set name = "colcon-common-extensions" %}
-{% set version = "0.3.0" %}
+schema_version: 1
+
+context:
+  name: colcon-common-extensions
+  version: "0.3.0"
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: colcon-common-extensions
+  version: ${{ version }}
 
 source:
-  url: https://github.com/colcon/{{ name }}/archive/{{ version }}.tar.gz
+  url: https://github.com/colcon/${{ name }}/archive/${{ version }}.tar.gz
   sha256: f3b2e939f201e949486324cb0145216be478b7160d882017c5fb4210851cd316
 
 build:
-  number: 4
-  script: {{ PYTHON }} -m pip install . -vv
+  number: 5
+  script: python -m pip install . -vv
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
+    - if: build_platform != target_platform
+      then:
+        - python
+        - cross-python_${{ target_platform }}
   host:
     - pip
     - python
@@ -29,7 +34,8 @@ requirements:
     - colcon-devtools
     - colcon-library-path
     - colcon-metadata
-    - colcon-notification  # [win]
+    - if: win
+      then: colcon-notification
     - colcon-output
     - colcon-package-information
     - colcon-package-selection
@@ -39,17 +45,22 @@ requirements:
     - colcon-recursive-crawl
     - colcon-ros
     - colcon-test-result
-    - colcon-argcomplete  # [not win]
-    - colcon-cd  # [not win]
-    - colcon-bash  # [not win]
-    - colcon-zsh  # [not win]
+    - if: not win
+      then:
+        - colcon-argcomplete
+        - colcon-cd
+        - colcon-bash
+        - colcon-zsh
 
-test:
-  imports:
-    - {{ name.replace("-", "_") }}
+tests:
+  - python:
+      imports:
+        - colcon_common_extensions
+      # The recipe includes colcon-notification only on Windows, unlike upstream metadata.
+      pip_check: false
 
 about:
-  home: https://github.com/colcon/{{ name }}
+  homepage: https://github.com/colcon/${{ name }}
   license: Apache-2.0
   license_file: LICENSE
   summary: |
